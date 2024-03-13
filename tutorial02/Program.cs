@@ -12,14 +12,14 @@ class Program
         Console.WriteLine(CountAverage(array));
     }
 
-    public static double CountAverage(int[] array)
+    private static double CountAverage(int[] array)
     {
         double sum = 0;
         for (int i = 0; i < array.Length; i++)
         {
             sum += array[i];
         }
-
         return sum / array.Length;
     }
+    
 }
