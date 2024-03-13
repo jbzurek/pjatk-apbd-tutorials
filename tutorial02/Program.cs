@@ -21,5 +21,15 @@ class Program
         }
         return sum / array.Length;
     }
+
+    private static int MaxValue(int[] array)
+    {
+        int max = array[0];
+        for (int i = 0; i < array.Length; i++)
+        {
+            
+        }
+        return max;
+    }
     
 }
