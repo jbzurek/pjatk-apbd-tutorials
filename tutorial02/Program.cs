@@ -6,6 +6,6 @@ class Program
     {
         string name = "Jakub";
         string city = "Warsaw";
-        Console.WriteLine("Hello, World!");
+        Console.WriteLine("Hello, " + name + " from " + city);
     }
 }
