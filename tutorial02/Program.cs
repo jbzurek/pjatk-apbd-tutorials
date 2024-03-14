@@ -25,15 +25,15 @@ class Program
 
     private static int MaxValue(int[] array)
     {
-        int max = array[0];
+        int maxVal = array[0];
         for (int i = 0; i < array.Length; i++)
         {
-            if (max < array[i])
+            if (maxVal < array[i])
             {
-                max = array[i];
+                maxVal = array[i];
             }
         }
-        return max;
+        return maxVal;
     }
     
 }
