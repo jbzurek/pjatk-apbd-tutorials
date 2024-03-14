@@ -10,6 +10,7 @@ class Program
 
         int[] array = [2, 2, 2, 3, 1, 1];
         Console.WriteLine(CountAverage(array));
+        Console.WriteLine(MaxValue(array));
     }
 
     private static double CountAverage(int[] array)
