@@ -2,7 +2,7 @@ using LegacyApp;
 
 namespace LegacyAppTest;
 
-public class UserServiceTests
+public class UserServiceTests 
 {
     [Fact]
     public void AddUser_Should_Return_False_When_Missing_FirstName()
@@ -39,7 +39,7 @@ public class UserServiceTests
     }
 
     [Fact]
-    public void AddUser_Should_Return_Flase_When_Email_Is_Invalid()
+    public void AddUser_Should_Return_False_When_Email_Is_Invalid()
     {
         // Arrange
         var service = new UserService();

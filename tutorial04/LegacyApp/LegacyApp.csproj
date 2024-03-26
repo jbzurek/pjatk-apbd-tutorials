@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <Folder Include="Core\DAL\" />
-      <Folder Include="Core\Interfaces\" />
       <Folder Include="Core\Validators\" />
     </ItemGroup>
 
