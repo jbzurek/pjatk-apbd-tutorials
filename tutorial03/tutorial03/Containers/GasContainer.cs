@@ -27,7 +27,7 @@ public class GasContainer : Container, IHazardNotifier
     {
         if (weight + NetWeight > MaxWeight)
         {
-            throw new WeightExceedException("Cargo weight exceeds maximum capacity!");
+            throw new OverfillException("Cargo weight exceeds maximum capacity!");
         }
     }
     
