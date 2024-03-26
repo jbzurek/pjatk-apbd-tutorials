@@ -4,14 +4,17 @@ namespace tutorial03.BaseClasses;
 
 public class ContainerShip
 {
+    public static List<ContainerShip> containerShips = new List<ContainerShip>();
+    public static int shipCounter = 1;
     public List<Container> Containers { get; private set; }
+    public string ShipName { get; set; }
     public int MaxSpeed { get; }
-
     public int MaxContainers { get; }
     public int MaxWeightCapacity { get; }
 
-    public ContainerShip(int maxSpeed, int maxContainers, int maxWeightCapacity)
+    public ContainerShip(string shipName, int maxSpeed, int maxContainers, int maxWeightCapacity)
     {
+        ShipName = shipName;
         MaxSpeed = maxSpeed;
         MaxContainers = maxContainers;
         MaxWeightCapacity = maxWeightCapacity;
@@ -137,4 +140,5 @@ public class ContainerShip
         }
         return totalWeight;
     }
+    
 }
