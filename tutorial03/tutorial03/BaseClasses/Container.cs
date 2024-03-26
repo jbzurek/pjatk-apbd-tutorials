@@ -23,6 +23,6 @@ public abstract class Container
     }
 
     public abstract void Unload();
-    public abstract void Load();
+    public abstract void Load(int weight);
     
 }
