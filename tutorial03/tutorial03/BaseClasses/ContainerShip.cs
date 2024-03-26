@@ -124,7 +124,7 @@ public class ContainerShip
         Console.WriteLine("Containers on the ship:");
         foreach (var container in Containers)
         {
-            Console.WriteLine($"Container Serial Number: {container.SerialNumber}, Cargo Weight: {container.CargoWeight} kg");
+            Console.WriteLine($"Container Serial Number: {container.SerialNumber}, Cargo Weight: {container.NetWeight} kg");
         }
     }
     
