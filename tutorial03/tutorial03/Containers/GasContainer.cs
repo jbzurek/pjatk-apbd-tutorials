@@ -1,20 +1,23 @@
-﻿using tutorial03.BaseClasses;
+﻿using System.Net.WebSockets;
+using tutorial03.BaseClasses;
 using tutorial03.Exceptions;
 using tutorial03.Generators;
 using tutorial03.Interfaces;
 
 namespace tutorial03.Containers;
 
-public class LiquidContainer : Container, IHazardNotifier
+public class GasContainer : Container, IHazardNotifier
 {
-    public override string ContainerType => "L";
-    public bool IsDangerous { get; }
+    public override string ContainerType => "G";
     
-    public LiquidContainer(int netWeight, int height, int tareWeight, int depth, int maxWeight, ContainerSerialNumberGenerator serialNumberGenerator, bool isDangerous)
+    public int Pressure { get; }
+
+    public GasContainer(int netWeight, int height, int tareWeight, int depth, int maxWeight, ContainerSerialNumberGenerator serialNumberGenerator, int pressure)
         : base(netWeight, height, tareWeight, depth, maxWeight, serialNumberGenerator)
     {
-        IsDangerous = isDangerous;
+        Pressure = pressure;
     }
+    
     public override void Unload()
     {
         NetWeight = 0;
@@ -26,12 +29,10 @@ public class LiquidContainer : Container, IHazardNotifier
         {
             throw new WeightExceedException("Cargo weight exceeds maximum capacity!");
         }
-
-        NetWeight += weight;
     }
-
+    
     public void Notify(string message, string containerNumber)
     {
-        Console.Write($"Hazard notification for container {containerNumber}: {message}");
+        throw new NotImplementedException();
     }
 }
