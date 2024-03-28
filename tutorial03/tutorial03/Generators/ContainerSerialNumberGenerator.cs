@@ -2,7 +2,7 @@
 
 public class ContainerSerialNumberGenerator
 {
-    private Dictionary<string, int> _serialNumber;
+    private static Dictionary<string, int> _serialNumber;
 
     public ContainerSerialNumberGenerator()
     {
