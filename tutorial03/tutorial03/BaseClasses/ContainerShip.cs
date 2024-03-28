@@ -4,8 +4,7 @@ namespace tutorial03.BaseClasses;
 
 public class ContainerShip
 {
-    public static List<ContainerShip> containerShips = new List<ContainerShip>();
-    public static int shipCounter = 1;
+    public static List<ContainerShip> Ships = new List<ContainerShip>();
     public List<Container> Containers { get; private set; }
     public string ShipName { get; set; }
     public int MaxSpeed { get; }
@@ -19,13 +18,14 @@ public class ContainerShip
         MaxContainers = maxContainers;
         MaxWeightCapacity = maxWeightCapacity;
         Containers = new List<Container>();
+        Ships.Add(this);
     }
-    
+
     public void LoadCargoIntoContainer(Container container, int netWeight)
     {
         container.Load(netWeight);
     }
-    
+
     public void LoadContainer(Container container)
     {
         if (Containers.Count < MaxContainers && CalculateTotalWeight() + container.NetWeight <= MaxWeightCapacity)
@@ -35,10 +35,11 @@ public class ContainerShip
         }
         else
         {
-            Console.WriteLine($"Could not load container {container.SerialNumber} onto the ship. Ship's capacity exceeded.");
+            Console.WriteLine(
+                $"Could not load container {container.SerialNumber} onto the ship. Ship's capacity exceeded.");
         }
     }
-    
+
     public void LoadContainers(List<Container> containers)
     {
         foreach (var container in containers)
@@ -46,7 +47,7 @@ public class ContainerShip
             LoadContainer(container);
         }
     }
-    
+
     public void RemoveContainer(string containerNumber)
     {
         var container = Containers.Find(c => c.SerialNumber == containerNumber);
@@ -60,7 +61,7 @@ public class ContainerShip
             Console.WriteLine($"Container {containerNumber} not found on the ship.");
         }
     }
-    
+
     public void UnloadContainer(Container container)
     {
         if (Containers.Contains(container))
@@ -73,13 +74,13 @@ public class ContainerShip
             Console.WriteLine($"Container {container.SerialNumber} not found on the ship.");
         }
     }
-    
+
     public void ReplaceContainer(string containerNumber, Container newContainer)
     {
         RemoveContainer(containerNumber);
         LoadContainer(newContainer);
     }
-    
+
     public void MoveContainer(Container container, ContainerShip destinationShip)
     {
         if (Containers.Contains(container))
@@ -93,7 +94,7 @@ public class ContainerShip
             Console.WriteLine($"Container {container.SerialNumber} not found on this ship.");
         }
     }
-    
+
     public void PrintContainerInfo(Container container)
     {
         Console.WriteLine($"Container Serial Number: {container.SerialNumber}");
@@ -108,29 +109,30 @@ public class ContainerShip
         }
         else if (container is CoolContainer coolContainer)
         {
-            Console.WriteLine($"Type: Refrigerated Container");
+            Console.WriteLine($"Type: Cool Container");
             Console.WriteLine($"Product Type: {coolContainer.ProductType}");
             Console.WriteLine($"Temperature: {coolContainer.RequiredTemperature} °C");
         }
     }
-    
+
     public void PrintShipInfo()
     {
-        Console.WriteLine($"Ship's Max Speed: {MaxSpeed} knots");
+        Console.WriteLine($"Ship's Max Speed: {MaxSpeed}");
         Console.WriteLine($"Maximum Containers: {MaxContainers}");
         Console.WriteLine($"Max Weight Capacity: {MaxWeightCapacity} tons");
         Console.WriteLine($"Current Number of Containers: {Containers.Count}");
     }
-    
+
     public void PrintCargoInfo()
     {
         Console.WriteLine("Containers on the ship:");
         foreach (var container in Containers)
         {
-            Console.WriteLine($"Container Serial Number: {container.SerialNumber}, Cargo Weight: {container.NetWeight} kg");
+            Console.WriteLine(
+                $"Container Serial Number: {container.SerialNumber}, Cargo Weight: {container.NetWeight} kg");
         }
     }
-    
+
     private int CalculateTotalWeight()
     {
         int totalWeight = 0;
@@ -138,7 +140,7 @@ public class ContainerShip
         {
             totalWeight += container.NetWeight;
         }
+
         return totalWeight;
     }
-    
 }
