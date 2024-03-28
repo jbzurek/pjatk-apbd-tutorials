@@ -1,5 +1,4 @@
-﻿using System.Net.WebSockets;
-using tutorial03.BaseClasses;
+﻿using tutorial03.BaseClasses;
 using tutorial03.Exceptions;
 using tutorial03.Generators;
 using tutorial03.Interfaces;
@@ -10,7 +9,7 @@ public class GasContainer : Container, IHazardNotifier
 {
     public override string ContainerType => "G";
 
-    public int Pressure { get; }
+    public int Pressure { get; set; }
 
     public GasContainer(int netWeight, int height, int tareWeight, int depth, int maxWeight,
         ContainerSerialNumberGenerator serialNumberGenerator, int pressure)
@@ -21,19 +20,21 @@ public class GasContainer : Container, IHazardNotifier
 
     public override void Unload()
     {
-        NetWeight = 0;
+        NetWeight = (int)(NetWeight * 0.05);
     }
 
-    public override void Load(int weight)
+    protected override void Load(int weight)
     {
         if (weight + NetWeight > MaxWeight)
         {
             throw new OverfillException("Cargo weight exceeds maximum capacity!");
         }
+
+        NetWeight += weight;
     }
 
     public void Notify(string message, string containerNumber)
     {
-        throw new NotImplementedException();
+        Console.Write($"Hazard notification for container {containerNumber}: {message}");
     }
 }

@@ -8,7 +8,7 @@ namespace tutorial03.Containers;
 public class LiquidContainer : Container, IHazardNotifier
 {
     public override string ContainerType => "L";
-    public bool IsDangerous { get; }
+    public bool IsDangerous;
 
     public LiquidContainer(int netWeight, int height, int tareWeight, int depth, int maxWeight,
         ContainerSerialNumberGenerator serialNumberGenerator, bool isDangerous)
@@ -22,7 +22,7 @@ public class LiquidContainer : Container, IHazardNotifier
         NetWeight = 0;
     }
 
-    public override void Load(int weight)
+    protected override void Load(int weight)
     {
         if (weight + NetWeight > MaxWeight)
         {
