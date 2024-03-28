@@ -31,7 +31,6 @@ public class CoolContainer : Container
         ProductType = productType;
         RequiredTemperature = requiredTemperature;
     }
-
     
     public override void Unload()
     {
