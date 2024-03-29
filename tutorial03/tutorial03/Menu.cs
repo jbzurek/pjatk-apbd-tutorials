@@ -293,6 +293,7 @@ public class Menu
     private void PrintShipInfo()
     {
         Console.Clear();
+        Console.WriteLine();
         Console.WriteLine("Choose ship: ");
         for (int i = 0; i < ContainerShip.Ships.Count; i++)
         {
@@ -306,14 +307,13 @@ public class Menu
 
         Console.WriteLine($"Ship's Max Speed: {ContainerShip.Ships[choice].MaxSpeed}");
         Console.WriteLine($"Maximum Containers: {ContainerShip.Ships[choice].MaxContainers}");
-        Console.WriteLine($"Max Weight Capacity: {ContainerShip.Ships[choice].MaxWeightCapacity} tons");
+        Console.WriteLine($"Max Weight Capacity: {ContainerShip.Ships[choice].MaxWeightCapacity} kg");
         Console.WriteLine("Current containers: ");
         foreach (var container in ContainerShip.Ships[choice].Containers)
         {
             Console.Write(container.SerialNumber + ", ");
         }
 
-        Console.WriteLine();
         Console.WriteLine();
         Console.WriteLine("Press enter to return");
     }
