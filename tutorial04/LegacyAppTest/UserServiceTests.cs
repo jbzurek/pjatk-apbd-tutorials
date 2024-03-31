@@ -1,5 +1,4 @@
 using LegacyApp;
-using LegacyApp.Core.Models;
 
 namespace LegacyAppTest;
 

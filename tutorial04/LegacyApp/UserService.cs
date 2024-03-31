@@ -1,5 +1,7 @@
 using LegacyApp.Core.Interfaces;
+using LegacyApp.Core.Managers;
 using LegacyApp.Core.Models;
+using LegacyApp.Core.Validators;
 using LegacyApp.Core.Validators.Users;
 
 namespace LegacyApp;
@@ -7,6 +9,8 @@ namespace LegacyApp;
 public class UserService
 {
     private readonly IInputValidator _inputValidator = new InputValidator();
+    private readonly ICreditLimitValidator _creditLimitValidator = new CreditLimitValidator();
+
     public bool AddUser(string firstName, string lastName, string email, DateTime dateOfBirth, int clientId)
     {
         if (!_inputValidator.ValidateName(firstName, lastName))
@@ -35,31 +39,10 @@ public class UserService
             FirstName = firstName,
             LastName = lastName
         };
+        
+        CreditLimitManager.SetCreditLimit(client, user);
 
-        if (client.Type == "VeryImportantClient")
-        {
-            user.HasCreditLimit = false;
-        }
-        else if (client.Type == "ImportantClient")
-        {
-            using (var userCreditService = new UserCreditService())
-            {
-                int creditLimit = userCreditService.GetCreditLimit(user.LastName, user.DateOfBirth);
-                creditLimit *= 2;
-                user.CreditLimit = creditLimit;
-            }
-        }
-        else
-        {
-            user.HasCreditLimit = true;
-            using (var userCreditService = new UserCreditService())
-            {
-                int creditLimit = userCreditService.GetCreditLimit(user.LastName, user.DateOfBirth);
-                user.CreditLimit = creditLimit;
-            }
-        }
-
-        if (user.HasCreditLimit && user.CreditLimit < 500)
+        if (!_creditLimitValidator.IsCreditLimitValid(user))
         {
             return false;
         }
