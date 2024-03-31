@@ -1,7 +1,6 @@
 using LegacyApp.Core.Interfaces;
 using LegacyApp.Core.Managers;
 using LegacyApp.Core.Models;
-using LegacyApp.Core.Validators;
 using LegacyApp.Core.Validators.Users;
 
 namespace LegacyApp;
