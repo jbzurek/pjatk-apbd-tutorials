@@ -1,8 +1,9 @@
 using LegacyApp;
+using LegacyApp.Core.Models;
 
 namespace LegacyAppTest;
 
-public class UserServiceTests 
+public class UserServiceTests
 {
     [Fact]
     public void AddUser_Should_Return_False_When_Missing_FirstName()

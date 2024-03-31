@@ -1,4 +1,5 @@
 using LegacyApp.Core.Interfaces;
+using LegacyApp.Core.Models;
 using LegacyApp.Core.Validators.Users;
 
 namespace LegacyApp;
@@ -44,7 +45,7 @@ public class UserService
             using (var userCreditService = new UserCreditService())
             {
                 int creditLimit = userCreditService.GetCreditLimit(user.LastName, user.DateOfBirth);
-                creditLimit = creditLimit * 2;
+                creditLimit *= 2;
                 user.CreditLimit = creditLimit;
             }
         }

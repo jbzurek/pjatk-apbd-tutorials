@@ -1,3 +1,5 @@
+using LegacyApp.Core.Models;
+
 namespace LegacyApp;
 
 public class ClientRepository
