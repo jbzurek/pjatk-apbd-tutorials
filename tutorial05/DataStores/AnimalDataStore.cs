@@ -1,4 +1,6 @@
-﻿namespace tutorial05;
+﻿using tutorial05.Models;
+
+namespace tutorial05.DataStores;
 
 public class AnimalsDataStore
 {
