@@ -3,7 +3,7 @@
 Załóż konto na platformie GitHub - wykorzystaj przy tym szkolny adres email. Jeśli miałeś już konto założone wcześniej -
 dodaj adres szkolny do istniejącego konta w ustawieniach.
 W domu warto wygenerować klucz SSH i wykorzystywać go podczas uwierzytelnienia.
-https://docs.github.com/en/authentication/connecting-to-github-withssh
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh
 
 ### Zadanie 2 - konfiguracja Git'a
 
