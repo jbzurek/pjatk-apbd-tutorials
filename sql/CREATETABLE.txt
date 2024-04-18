@@ -1,0 +1,16 @@
+-- Created by Vertabelo (http://vertabelo.com)
+-- Last modification date: 2024-04-13 18:34:15.993
+
+-- tables
+-- Table: Animals
+CREATE TABLE Animals (
+    Id int  NOT NULL IDENTITY,
+    Name nvarchar(200)  NOT NULL,
+    Description nvarchar(200)  NULL,
+    Category nvarchar(200)  NOT NULL,
+    Area nvarchar(200)  NOT NULL,
+    CONSTRAINT Animals_pk PRIMARY KEY  (Id)
+);
+
+-- End of file.
+
