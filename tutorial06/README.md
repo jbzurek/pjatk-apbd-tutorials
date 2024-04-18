@@ -3,7 +3,9 @@ pozwalających na modyfikowanie danych w bazie SQL Server. Razem z zadaniem zał
 stworzenie tabelki Animals i wypełnienie jej danymi. Komunikacja z bazą danych powinna odbywać się poprzez klasy
 SqlConnection/SqlCommand.
 
-![Animal table](/images/animal_table.png)
+<p align="center">
+  <img src="/images/animal_table.png"/>
+</p>
 
 Dane serwera: db-mssql16.pjwstk.edu.pl
 
