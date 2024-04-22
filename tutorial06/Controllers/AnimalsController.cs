@@ -1,6 +1,6 @@
-﻿using System.Data.SqlClient;
-using Microsoft.AspNetCore.Mvc;
-using tutorial06.DTOs;
+﻿using Microsoft.AspNetCore.Mvc;
+using tutorial06.Models;
+using tutorial06.Services;
 
 namespace tutorial06.Controllers;
 
@@ -8,32 +8,51 @@ namespace tutorial06.Controllers;
 [Route("api/animals")]
 public class AnimalsController : ControllerBase
 {
-    [HttpGet]
-    public ActionResult<IEnumerable<AnimalDto>> GetAnimals()
+    private IAnimalsService _animalsService;
+
+    public AnimalsController(IAnimalsService animalsService)
     {
-        using SqlConnection connection = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=APBD;Integrated Security=True");
-        using SqlCommand command = new SqlCommand();
+        _animalsService = animalsService;
+    }
 
-        command.Connection = connection;
-        command.CommandText = "SELECT * FROM Animals";
+    [HttpGet]
+    public IActionResult GetAnimals([FromQuery] string orderBy = "name")
+    {
+        var animals = _animalsService.GetAnimals(orderBy);
+        return Ok(animals);
+    }
 
-        connection.Open();
-
-        SqlDataReader reader = command.ExecuteReader();
-
-        List<AnimalDto> animals = new List<AnimalDto>();
-        while (reader.Read())
+    [HttpGet("{id:int}")]
+    public IActionResult GetAnimal(int id)
+    {
+        var animal = _animalsService.GetAnimalById(id);
+        
+        if (animal == null)
         {
-            AnimalDto animal = new AnimalDto();
-            animal.Id = (int)reader["id"];
-            animal.Name = (string)reader["name"];
-            animal.Description = (string)reader["description"];
-            animal.Area = (string)reader["area"];
-            animal.Category = (string)reader["category"];
-
-            animals.Add(animal);
+            return NotFound("Animal not found!");
         }
 
-        return Ok();
+        return Ok(animal);
+    }
+
+    [HttpPost]
+    public IActionResult CreateAnimal(Animal animal)
+    {
+        var affectedCount = _animalsService.CreateAnimal(animal);
+        return StatusCode(StatusCodes.Status201Created);
+    }
+    
+    [HttpPut("{id:int}")]
+    public IActionResult UpdateAnimal(int id, Animal animal)
+    {
+        var affectedCount = _animalsService.UpdateAnimal(animal);
+        return NoContent();
+    }
+
+    [HttpDelete("{id:int}")]
+    public IActionResult DeleteAnimal(int id)
+    {
+        var affectedCount = _animalsService.DeleteAnimal(id);
+        return NoContent();
     }
 }

@@ -3,7 +3,7 @@ using tutorial06.Repositories;
 
 namespace tutorial06.Services;
 
-public class AnimalsService : IAnimalService
+public class AnimalsService : IAnimalsService
 {
     private readonly IAnimalsRepository _animalsRepository;
 
