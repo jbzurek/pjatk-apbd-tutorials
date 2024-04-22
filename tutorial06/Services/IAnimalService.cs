@@ -1,8 +1,8 @@
-﻿using tutorial06.Models;
+using tutorial06.Models;
 
-namespace tutorial06.Repositories.Interfaces;
+namespace tutorial06.Services;
 
-public interface IAnimalRepository
+public interface IAnimalService
 {
     IEnumerable<Animal> GetAnimals(string orderBy);
     Animal GetAnimalById(int id);

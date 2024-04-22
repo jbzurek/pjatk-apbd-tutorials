@@ -2,8 +2,8 @@
 -- Last modification date: 2024-04-13 18:34:15.993
 
 -- tables
--- Table: Animals
-CREATE TABLE Animals (
+-- Table: Animal
+CREATE TABLE Animal (
     Id int  NOT NULL IDENTITY,
     Name nvarchar(200)  NOT NULL,
     Description nvarchar(200)  NULL,

@@ -13,10 +13,10 @@ public class AnimalsController : ControllerBase
     {
         using SqlConnection connection = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=APBD;Integrated Security=True");
         using SqlCommand command = new SqlCommand();
-        
+
         command.Connection = connection;
         command.CommandText = "SELECT * FROM Animals";
-        
+
         connection.Open();
 
         SqlDataReader reader = command.ExecuteReader();
@@ -25,15 +25,15 @@ public class AnimalsController : ControllerBase
         while (reader.Read())
         {
             AnimalDto animal = new AnimalDto();
-            animal.Id = (int) reader["id"];
-            animal.Name = (string) reader["name"];
-            animal.Description = (string) reader["description"];
-            animal.Area = (string) reader["area"];
-            animal.Category = (string) reader["category"];
-            
+            animal.Id = (int)reader["id"];
+            animal.Name = (string)reader["name"];
+            animal.Description = (string)reader["description"];
+            animal.Area = (string)reader["area"];
+            animal.Category = (string)reader["category"];
+
             animals.Add(animal);
         }
-        
+
         return Ok();
     }
 }

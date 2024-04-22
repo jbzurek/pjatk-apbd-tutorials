@@ -1,4 +1,8 @@
-// TODO: AnimalRepository, AnimalService, IAnimalService
+// TODO: AnimalsRepository, AnimalService, IAnimalService
+
+using tutorial06.Controllers;
+using tutorial06.Repositories;
+using tutorial06.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddScoped<IAnimalsRepository, AnimalsRepository>();
+builder.Services.AddScoped<IAnimalService, AnimalsService>();
 
 var app = builder.Build();
 
