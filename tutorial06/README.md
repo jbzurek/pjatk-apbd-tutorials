@@ -4,7 +4,7 @@ stworzenie tabelki Animals i wypełnienie jej danymi. Komunikacja z bazą danych
 SqlConnection/SqlCommand.
 
 <p align="center">
-  <img src="/images/animal_table.png"/>
+  <img src="/images/animal_table.svg"/>
 </p>
 
 Dane serwera: db-mssql16.pjwstk.edu.pl
