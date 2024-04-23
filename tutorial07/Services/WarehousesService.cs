@@ -1,4 +1,5 @@
 ﻿using System.Data.SqlClient;
+using tutorial07.Exceptions;
 using tutorial07.Models;
 
 namespace tutorial07.Services;
@@ -14,97 +15,136 @@ public class WarehousesService : IWarehousesService
 
     public async Task<int> AddProduct(ProductWarehouse productWarehouse)
     {
-        using var connection = new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]);
-        await connection.OpenAsync();
+        int idOrder = await GetOrderIdAsync(productWarehouse);
+        double price = await GetProductPriceAsync(productWarehouse);
+        await CheckWarehouseExistsAsync(productWarehouse);
 
-        using var command = new SqlCommand();
-        command.Connection = connection;
-
-        command.CommandText = "SELECT TOP 1 [Order].IdOrder FROM [Order] " +
-                              "LEFT JOIN Product_Warehouse ON [Order].IdOrder = Product_Warehouse.IdOrder " +
-                              "WHERE [Order].IdProduct = @IdProduct " +
-                              "AND [Order].Amount = @Amount " +
-                              "AND Product.Warehouse.IdProductWarehouse IS NULL " +
-                              "AND [Order.CreatedAt] < @CreatedAt";
-
-        command.Parameters.AddWithValue("@IdProduct", productWarehouse.IdProduct);
-        command.Parameters.AddWithValue("@Amount", productWarehouse.Amount);
-        command.Parameters.AddWithValue("@CreatedAt", productWarehouse.CreatedAt);
-
-        var reader = await command.ExecuteReaderAsync();
-
-        if (!reader.HasRows) throw new Exception(); // TODO: Custom Exception
-
-        int idOrder = (int)reader["IdOrder"];
-
-        await reader.CloseAsync();
-        command.Parameters.Clear();
-
-        command.CommandText = "SELECT Price FROM Product WHERE IdProduct = @IdProduct";
-        command.Parameters.AddWithValue("@IdProduct", productWarehouse.IdProduct);
-
-        reader = await command.ExecuteReaderAsync();
-
-        if (!reader.HasRows) throw new Exception(); // TODO: Custom Exception
-
-        await reader.ReadAsync();
-
-        double price = (double)reader["Price"];
-
-        await reader.CloseAsync();
-        command.Parameters.Clear();
-
-        command.CommandText = "SELECT IdWarehouse FROM Warehouse WHERE IdWarehouse = @IdWarehouse";
-        command.Parameters.AddWithValue("@IdWarehouse", productWarehouse.IdWarehouse);
-
-        reader = await command.ExecuteReaderAsync();
-
-        if (!reader.HasRows) throw new Exception(); // TODO: Custom Exception
-
-        await reader.CloseAsync();
-        command.Parameters.Clear();
-
-        var transaction = (SqlTransaction)await connection.BeginTransactionAsync();
-        command.Transaction = transaction;
-
-        try
+        using (var connection = new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]))
         {
+            await connection.OpenAsync();
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    await UpdateOrderFulfilledAsync(connection, transaction, productWarehouse, idOrder);
+                    await InsertProductWarehouseAsync(connection, transaction, productWarehouse, idOrder, price);
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
+
+            return await GetLastInsertedProductWarehouseIdAsync(connection);
+        }
+    }
+
+    private async Task<int> GetOrderIdAsync(ProductWarehouse productWarehouse)
+    {
+        using (var connection = new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]))
+        {
+            await connection.OpenAsync();
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "SELECT TOP 1 [Order].IdOrder FROM [Order] " +
+                                      "LEFT JOIN Product_Warehouse ON [Order].IdOrder = Product_Warehouse.IdOrder " +
+                                      "WHERE [Order].IdProduct = @IdProduct " +
+                                      "AND [Order].Amount = @Amount " +
+                                      "AND Product.Warehouse.IdProductWarehouse IS NULL " +
+                                      "AND [Order.CreatedAt] < @CreatedAt";
+                command.Parameters.AddWithValue("@IdProduct", productWarehouse.IdProduct);
+                command.Parameters.AddWithValue("@Amount", productWarehouse.Amount);
+                command.Parameters.AddWithValue("@CreatedAt", productWarehouse.CreatedAt);
+
+                var idOrder = await command.ExecuteScalarAsync();
+                if (idOrder == null) throw new NoCorrespondingOrderException("No corresponding order found!");
+                return (int)idOrder;
+            }
+        }
+    }
+
+    private async Task<double> GetProductPriceAsync(ProductWarehouse productWarehouse)
+    {
+        using (var connection = new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]))
+        {
+            await connection.OpenAsync();
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "SELECT Price FROM Product WHERE IdProduct = @IdProduct";
+                command.Parameters.AddWithValue("@IdProduct", productWarehouse.IdProduct);
+
+                var price = await command.ExecuteScalarAsync();
+                if (price == null) throw new ProductNotFoundException("The product could not be found!");
+                return (double)price;
+            }
+        }
+    }
+
+    private async Task CheckWarehouseExistsAsync(ProductWarehouse productWarehouse)
+    {
+        using (var connection = new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]))
+        {
+            await connection.OpenAsync();
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = "SELECT IdWarehouse FROM Warehouse WHERE IdWarehouse = @IdWarehouse";
+                command.Parameters.AddWithValue("@IdWarehouse", productWarehouse.IdWarehouse);
+
+                var warehouseId = await command.ExecuteScalarAsync();
+                if (warehouseId == null) throw new WarehouseNotFoundException("The warehouse could not be found!");
+            }
+        }
+    }
+
+    private async Task UpdateOrderFulfilledAsync(SqlConnection connection, SqlTransaction transaction,
+        ProductWarehouse productWarehouse, int idOrder)
+    {
+        using (var command = connection.CreateCommand())
+        {
+            command.Transaction = transaction;
             command.CommandText = "UPDATE [Order] SET FulfilledAt = @CreatedAt WHERE IdOrder = @IdOrder";
             command.Parameters.AddWithValue("@CreatedAt", productWarehouse.CreatedAt);
             command.Parameters.AddWithValue("@IdOrder", idOrder);
 
-            int rowsUpdated = await command.ExecuteNonQueryAsync();
-            if (rowsUpdated < 1) throw new Exception(); // TODO: Custom Exception
-            command.Parameters.Clear();
+            var rowsUpdated = await command.ExecuteNonQueryAsync();
+            if (rowsUpdated < 1) throw new OrderAlreadyFulfilledException("Order has been already fulfilled!");
+        }
+    }
 
-            command.CommandText = "INSERT INTO Product_Warehouse(IdWarehouse, IdProduct, Amount, Price, CreatedAt) " +
-                                  $"VALUES(@IdWarehouse, @IdProduct, @Amount, @Amount * {price}, @CreatedAt)";
+    private async Task InsertProductWarehouseAsync(SqlConnection connection, SqlTransaction transaction,
+        ProductWarehouse productWarehouse, int idOrder, double price)
+    {
+        using (var command = connection.CreateCommand())
+        {
+            command.Transaction = transaction;
+            command.CommandText =
+                "INSERT INTO Product_Warehouse(IdWarehouse, IdProduct, IdOrder, Amount, Price, CreatedAt) " +
+                $"VALUES(@IdWarehouse, @IdProduct, @IdOrder, @Amount, @Price, @CreatedAt)";
             command.Parameters.AddWithValue("@IdWarehouse", productWarehouse.IdWarehouse);
             command.Parameters.AddWithValue("@IdProduct", productWarehouse.IdProduct);
             command.Parameters.AddWithValue("@IdOrder", idOrder);
             command.Parameters.AddWithValue("@Amount", productWarehouse.Amount);
+            command.Parameters.AddWithValue("@Price", productWarehouse.Amount * price);
             command.Parameters.AddWithValue("@CreatedAt", productWarehouse.CreatedAt);
 
-            int rowsInserted = await command.ExecuteNonQueryAsync();
-            await transaction.CommitAsync();
+            var rowsInserted = await command.ExecuteNonQueryAsync();
+            if (rowsInserted < 1) throw new FailedInsertException("Failed to insert product into warehouse!");
         }
-        catch (Exception)
+    }
+
+    private async Task<int> GetLastInsertedProductWarehouseIdAsync(SqlConnection connection)
+    {
+        using (var command = connection.CreateCommand())
         {
-            await transaction.RollbackAsync();
-            throw new Exception(); // TODO: Custom Exception
+            command.CommandText =
+                "SELECT TOP 1 IdProductWarehouse FROM Product_Warehouse ORDER BY IdProductWarehouse DESC";
+
+            var idProductWarehouse = await command.ExecuteScalarAsync();
+            if (idProductWarehouse == null)
+                throw new LastInsertedIdNotFoundException("Failed to get last inserted product warehouse ID!");
+            return (int)idProductWarehouse;
         }
-        
-        command.Parameters.Clear();
-
-        command.CommandText =
-            "SELECT TOP 1 IdProductWarehouse FROM Product_Warehouse ORDER BY IdProductWarehouse DESC ";
-        reader = await command.ExecuteReaderAsync();
-
-        await reader.ReadAsync();
-        int idProductWarehouse = (int)reader["IdProductWarehouse"];
-        await reader.CloseAsync();
-        await connection.CloseAsync();
-        
-        return idProductWarehouse;
     }
 }
