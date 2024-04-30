@@ -7,7 +7,7 @@ magazynem. Poniżej przedstawiono bazę danych, której używamy. Ponadto,
 w pliku create.sql znajdziesz skrypt, który tworzy tabele i wypełnia je danymi.
 
 <p align="center">
-  <img src="/images/diagram_tutorial07.svg"/>
+  <img src="/images/tutorial07_diagram.png"/>
 </p>
 
 Zadanie 1
