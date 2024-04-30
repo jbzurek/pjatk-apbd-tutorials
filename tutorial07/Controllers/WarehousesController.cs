@@ -21,4 +21,18 @@ public class WarehousesController : ControllerBase
         int result = await _warehousesService.AddProduct(product);
         return Ok();
     }
+    
+    [HttpPost("AddProductWithStoredProc")]
+    public async Task<ActionResult<int>> AddProductWithStoredProc(ProductWarehouse product)
+    {
+        try
+        {
+            int newProductWarehouseId = await _warehousesService.AddProductWithProc(product);
+            return Ok(newProductWarehouseId);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error occured: {ex.Message}");
+        }
+    }
 }

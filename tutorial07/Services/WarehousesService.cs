@@ -1,4 +1,5 @@
-﻿using System.Data.SqlClient;
+﻿using System.Data;
+using System.Data.SqlClient;
 using tutorial07.Exceptions;
 using tutorial07.Models;
 
@@ -145,6 +146,31 @@ public class WarehousesService : IWarehousesService
             if (idProductWarehouse == null)
                 throw new LastInsertedIdNotFoundException("Failed to get last inserted product warehouse ID!");
             return (int)idProductWarehouse;
+        }
+    }
+
+    public async Task<int> AddProductWithProc(ProductWarehouse productWarehouse)
+    {
+        using (var connection = new SqlConnection(_configuration["ConnectionStrings:DefaultConnection"]))
+        {
+            await connection.OpenAsync();
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandText = "AddProductToWarehouse";
+                command.Parameters.AddWithValue("@IdProduct", productWarehouse.IdProduct);
+                command.Parameters.AddWithValue("@IdWarehouse", productWarehouse.IdWarehouse);
+                command.Parameters.AddWithValue("@Amount", productWarehouse.Amount);
+                command.Parameters.AddWithValue("@CreatedAt", productWarehouse.CreatedAt);
+
+                var newProductWarehouseId = await command.ExecuteScalarAsync();
+                if (newProductWarehouseId == null || newProductWarehouseId == DBNull.Value)
+                {
+                    throw new NewRecordIdNotAvailableException("Failed to obtain the ID of the newly added record!");
+                }
+
+                return Convert.ToInt32(newProductWarehouseId);
+            }
         }
     }
 }
