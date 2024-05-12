@@ -216,8 +216,8 @@ public static class LinqTasks
         //     .Where(emp => emp.Salary == max);
 
         IEnumerable<Emp> result = Emps
-            .Where(emp => emp.Salary == Emps
-                .Max(e => e.Salary));
+            .Where(emp => emp.Salary == Emps.Max(e => e.Salary));
+
         return result;
     }
 
@@ -228,6 +228,7 @@ public static class LinqTasks
     {
         IEnumerable<object> result = Emps
             .Select(emp => new { Nazwisko = emp.Ename, Praca = emp.Job });
+
         return result;
     }
 
@@ -240,6 +241,7 @@ public static class LinqTasks
     {
         IEnumerable<object> result = Emps
             .Join(Depts, emp => emp.Deptno, dept => dept.Deptno, (emp, dept) => new { emp.Ename, emp.Job, dept.Dname });
+
         return result;
     }
 
@@ -251,6 +253,7 @@ public static class LinqTasks
         IEnumerable<object> result = Emps
             .GroupBy(emp => emp.Job)
             .Select(group => new { Praca = group.Key, LiczbaPracownikow = group.Count() });
+
         return result;
     }
 
@@ -326,7 +329,8 @@ public static class LinqTasks
     /// </summary>
     public static IEnumerable<Emp> Task12()
     {
-        IEnumerable<Emp> result = null;
+        IEnumerable<Emp> result = Emps.GetEmpsWithSubordinates();
+
         return result;
     }
 
@@ -339,8 +343,12 @@ public static class LinqTasks
     /// </summary>
     public static int Task13(int[] arr)
     {
-        int result = 0;
-        //result=
+        int result = arr
+            .GroupBy(x => x)
+            .Where(g => g.Count() % 2 != 0)
+            .Select(g => g.Key)
+            .First();
+
         return result;
     }
 
@@ -350,8 +358,11 @@ public static class LinqTasks
     /// </summary>
     public static IEnumerable<Dept> Task14()
     {
-        IEnumerable<Dept> result = null;
-        //result =
+        IEnumerable<Dept> result = Depts
+            .Where(dept => Emps.Count(emp => emp.Deptno == dept.Deptno) == 5 ||
+                           Emps.Count(emp => emp.Deptno == dept.Deptno) == 0)
+            .OrderBy(dept => dept.Dname);
+
         return result;
     }
 
@@ -364,8 +375,13 @@ public static class LinqTasks
     /// </summary>
     public static IEnumerable<Dept> Task15()
     {
-        IEnumerable<Dept> result = null;
-        //result =
+        IEnumerable<Dept> result = Emps
+            .Where(emp => emp.Job.Contains('A'))
+            .GroupBy(emp => emp.Job)
+            .Where(g => g.Count() > 2)
+            .OrderByDescending(g => g.Count())
+            .Select(g => new Dept { Dname = g.Key, Deptno = -1, Loc = null });
+
         return result;
     }
 
@@ -374,8 +390,9 @@ public static class LinqTasks
     /// </summary>
     public static IEnumerable<Dept> Task16()
     {
-        IEnumerable<Dept> result = null;
-        //result =
+        IEnumerable<Dept> result = Emps
+            .SelectMany(emp => Depts, (emp, dept) => new Dept { Dname = emp.Job, Deptno = dept.Deptno, Loc = dept.Loc });
+
         return result;
     }
 }
@@ -385,8 +402,11 @@ public static class CustomExtensionMethods
     //Put your extension methods here
     public static IEnumerable<Emp> GetEmpsWithSubordinates(this IEnumerable<Emp> emps)
     {
-        var result = emps.Where(e => emps.Any(e2 => e2.Mgr == e.Mgr)).OrderBy(e => e.Ename)
+        var result = emps
+            .Where(e => emps.Any(e2 => e2.Mgr == e.Mgr))
+            .OrderBy(e => e.Ename)
             .ThenByDescending(e => e.Salary);
+        
         return result;
     }
 }

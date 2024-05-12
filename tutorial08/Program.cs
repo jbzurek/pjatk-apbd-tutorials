@@ -4,6 +4,6 @@ class Program
 {
     static void Main(string[] args)
     {
-        var t = LinqTasks.Task8();
+        var t = LinqTasks.Task16();
     }
 }
