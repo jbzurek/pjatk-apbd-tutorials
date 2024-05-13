@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using sampletest01.Models;
-using sampletest01.Repositories;
+using sampletest01.Models.DTOs;
 using sampletest01.Services;
 
 namespace sampletest01.Controllers;
@@ -21,5 +21,17 @@ public class PrescriptionsController : ControllerBase
     {
         var prescriptions = await _prescriptionsService.GetPrescriptionsAsync(doctorLastName);
         return Ok(prescriptions);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<Prescription>> CreatePrescriptionAsync(CreatePrescriptionDto createPrescriptionDto)
+    {
+        if (createPrescriptionDto.DueDate <= createPrescriptionDto.Date)
+        {
+            return BadRequest("DueDate must be later than Date!");
+        }
+
+        var prescription = await _prescriptionsService.CreatePrescriptionAsync(createPrescriptionDto);
+        return StatusCode(StatusCodes.Status201Created, prescription);
     }
 }
