@@ -41,8 +41,8 @@ temat recept, lekarzy i pacjentów. Korzystamy z SqlConnection/SqlCommand.
 3. Pamiętaj o:
     - poprawnym nazywaniu zmiennych, kontrolera itp.
     - utrzymaniu odpowiedniej struktury kodu
-    - pamiętaj o wstrzykiwaniu zależności
-    - pamiętaj o obsłudze błędów
+    - wstrzykiwaniu zależności
+    - obsłudze błędów
 
 4. Kod umieść w nowym repozytorium. Pamiętaj o pliku .gitignore i push’owaniu zmian na
    serwer.
