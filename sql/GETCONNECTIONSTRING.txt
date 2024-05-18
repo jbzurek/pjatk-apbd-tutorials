@@ -1,0 +1,9 @@
+SELECT
+    'data source=' + @@servername +
+    ';initial catalog=' + db_name() +
+    CASE type_desc
+        WHEN 'WINDOWS_LOGIN' THEN ';trusted_connection=true'
+        ELSE ';user id=' + suser_name() + ';password=<<YourPassword>>'
+    END AS ConnectionString
+FROM sys.server_principals
+WHERE name = suser_name()
