@@ -8,14 +8,26 @@ public class PatientConfig : IEntityTypeConfiguration<Patient>
 {
     public void Configure(EntityTypeBuilder<Patient> builder)
     {
-        builder.HasKey(e => e.IdPatient).HasName("IdPatient_PK");
-        builder.Property(e => e.IdPatient).UseIdentityColumn();
+        builder
+            .HasKey(e => e.IdPatient)
+            .HasName("IdPatient_PK");
+        builder
+            .Property(e => e.IdPatient)
+            .UseIdentityColumn();
 
-        builder.Property(e => e.FirstName).HasMaxLength(100).IsRequired();
-        builder.Property(e => e.LastName).HasMaxLength(100).IsRequired();
-        builder.Property(e => e.BirthDate).IsRequired();
+        builder
+            .Property(e => e.FirstName)
+            .HasMaxLength(100)
+            .IsRequired();
+        builder
+            .Property(e => e.LastName)
+            .HasMaxLength(100)
+            .IsRequired();
+        builder
+            .Property(e => e.BirthDate)
+            .IsRequired();
 
-        // adding data
+        // Adding data
 
         var patients = new List<Patient>();
 

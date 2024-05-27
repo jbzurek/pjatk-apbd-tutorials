@@ -3,6 +3,8 @@ using tutorial10.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// TODO: IHospitalRepository, HospitalRepository, HospitalController, PrescriptionRequestDTO, Prescription
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -12,7 +14,6 @@ builder.Services.AddDbContext<Context>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("sXXXXX"));
 });
-
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
-﻿using tutorial10.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using tutorial10.Configuration;
 
 namespace tutorial10.Models;
 

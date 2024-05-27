@@ -8,16 +8,19 @@ public class PrescriptionMedicamentConfig : IEntityTypeConfiguration<Prescriptio
 {
     public void Configure(EntityTypeBuilder<PrescriptionMedicament> builder)
     {
-        builder.HasKey(e => new
-        {
-            e.IdMedicament,
-            e.IdPrescription
-        }).HasName("PrescriptionMedicamend_PK");
+        builder
+            .HasKey(e => new { e.IdMedicament, e.IdPrescription })
+            .HasName("PrescriptionMedicamend_PK");
 
-        builder.ToTable("Prescription_Medicament");
+        builder
+            .ToTable("Prescription_Medicament");
 
-        builder.Property(e => e.Dose);
-        builder.Property(e => e.Details).HasMaxLength(100).IsRequired();
+        builder
+            .Property(e => e.Dose);
+        builder
+            .Property(e => e.Details)
+            .HasMaxLength(100)
+            .IsRequired();
 
         builder
             .HasOne(e => e.IdMedicamentNav)
@@ -33,7 +36,7 @@ public class PrescriptionMedicamentConfig : IEntityTypeConfiguration<Prescriptio
             .OnDelete(DeleteBehavior.ClientSetNull)
             .HasConstraintName("Prescription_Medicament_FK");
 
-        // adding data
+        // Adding data
 
         var list = new List<PrescriptionMedicament>();
 

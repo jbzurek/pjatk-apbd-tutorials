@@ -8,16 +8,31 @@ public class DoctorConfig : IEntityTypeConfiguration<Doctor>
 {
     public void Configure(EntityTypeBuilder<Doctor> builder)
     {
-        builder.HasKey(e => e.IdDoctor).HasName("Doctor_PK");
-        builder.Property(e => e.IdDoctor).UseIdentityColumn();
+        builder
+            .HasKey(e => e.IdDoctor)
+            .HasName("Doctor_PK");
+        builder
+            .Property(e => e.IdDoctor)
+            .UseIdentityColumn();
 
-        builder.Property(e => e.FirstName).HasMaxLength(100).IsRequired();
-        builder.Property(e => e.LastName).HasMaxLength(100).IsRequired();
+        builder
+            .Property(e => e.FirstName)
+            .HasMaxLength(100)
+            .IsRequired();
+        builder
+            .Property(e => e.LastName)
+            .HasMaxLength(100)
+            .IsRequired();
 
-        builder.Property(e => e.Email).HasMaxLength(100).IsRequired();
-        builder.HasIndex(e => e.Email).IsUnique();
+        builder
+            .Property(e => e.Email)
+            .HasMaxLength(100)
+            .IsRequired();
+        builder
+            .HasIndex(e => e.Email)
+            .IsUnique();
 
-        // adding data
+        // Adding data
         var doctors = new List<Doctor>();
 
         doctors.Add(new Doctor

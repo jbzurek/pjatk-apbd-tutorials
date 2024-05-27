@@ -8,14 +8,27 @@ public class MedicamentConfig : IEntityTypeConfiguration<Medicament>
 {
     public void Configure(EntityTypeBuilder<Medicament> builder)
     {
-        builder.HasKey(e => e.IdMedicament).HasName("IdMedicament_PK");
-        builder.Property(e => e.IdMedicament).UseIdentityColumn();
+        builder
+            .HasKey(e => e.IdMedicament)
+            .HasName("IdMedicament_PK");
+        builder
+            .Property(e => e.IdMedicament)
+            .UseIdentityColumn();
 
-        builder.Property(e => e.Name).HasMaxLength(100).IsRequired();
-        builder.Property(e => e.Description).HasMaxLength(100).IsRequired();
-        builder.Property(e => e.Type).HasMaxLength(100).IsRequired();
+        builder
+            .Property(e => e.Name)
+            .HasMaxLength(100)
+            .IsRequired();
+        builder
+            .Property(e => e.Description)
+            .HasMaxLength(100)
+            .IsRequired();
+        builder
+            .Property(e => e.Type)
+            .HasMaxLength(100)
+            .IsRequired();
 
-        // adding data
+        // Adding data
 
         var medicaments = new List<Medicament>();
 
