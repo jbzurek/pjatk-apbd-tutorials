@@ -7,9 +7,9 @@ public class Reservation
     public Client Client { get; set; }
     public DateTime DateFrom { get; set; }
     public DateTime DateTo { get; set; }
-    public List<Boat> Boats { get; set; }
+    public int IdBoatStandard { get; set; }
+    public int NumOfBoats { get; set; }
     public bool Fulfilled { get; set; }
-    public bool IsAccepted { get; set; }
-    public bool IsRejected { get; set; }
     public string CancelReason { get; set; }
+    public decimal Price { get; set; }
 }
