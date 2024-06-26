@@ -1295,26 +1295,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\s25434\\.nuget\\packages\\": {}
+    "C:\\Users\\kubaz\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\s25434\\Desktop\\pjatk-apbd-tutorials\\tutorial11\\tutorial11.csproj",
+      "projectUniqueName": "C:\\Users\\kubaz\\Desktop\\pjatk-apbd-tutorials\\tutorial11\\tutorial11.csproj",
       "projectName": "tutorial11",
-      "projectPath": "C:\\Users\\s25434\\Desktop\\pjatk-apbd-tutorials\\tutorial11\\tutorial11.csproj",
-      "packagesPath": "C:\\Users\\s25434\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\s25434\\Desktop\\pjatk-apbd-tutorials\\tutorial11\\obj\\",
+      "projectPath": "C:\\Users\\kubaz\\Desktop\\pjatk-apbd-tutorials\\tutorial11\\tutorial11.csproj",
+      "packagesPath": "C:\\Users\\kubaz\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\kubaz\\Desktop\\pjatk-apbd-tutorials\\tutorial11\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\s25434\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\kubaz\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -1327,11 +1325,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -1374,7 +1367,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.201/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
