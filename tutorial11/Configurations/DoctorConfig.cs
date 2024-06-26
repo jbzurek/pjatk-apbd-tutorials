@@ -11,7 +11,7 @@ public class DoctorConfig : IEntityTypeConfiguration<Doctor>
         builder
             .HasKey(e => e.IdDoctor)
             .HasName("Doctor_PK");
-        
+
         builder
             .Property(e => e.IdDoctor)
             .UseIdentityColumn();
@@ -20,7 +20,7 @@ public class DoctorConfig : IEntityTypeConfiguration<Doctor>
             .Property(e => e.FirstName)
             .HasMaxLength(100)
             .IsRequired();
-        
+
         builder
             .Property(e => e.LastName)
             .HasMaxLength(100)
@@ -30,7 +30,7 @@ public class DoctorConfig : IEntityTypeConfiguration<Doctor>
             .Property(e => e.Email)
             .HasMaxLength(100)
             .IsRequired();
-        
+
         builder
             .HasIndex(e => e.Email)
             .IsUnique();
