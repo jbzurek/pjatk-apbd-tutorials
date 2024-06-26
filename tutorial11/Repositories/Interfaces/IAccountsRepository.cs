@@ -4,7 +4,7 @@ using tutorial11.Models.DTOs;
 
 namespace tutorial11.Repositories.Interfaces;
 
-public interface IAccountRepository
+public interface IAccountsRepository
 {
     Task<DbAnswer> RegisterAsync(UserDto userDto);
     Task<User> FindByLoginAsync(string login);

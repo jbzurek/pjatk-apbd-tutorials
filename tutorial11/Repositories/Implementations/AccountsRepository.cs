@@ -5,11 +5,11 @@ using tutorial11.Models.DTOs;
 
 namespace tutorial11.Repositories.Implementations;
 
-public class AccountRepository : IAccountRepository
+public class AccountsesRepository : IAccountsRepository
 {
-    private readonly AppDbContext _context;
+    private readonly Context _context;
 
-    public AccountRepository(AppDbContext context)
+    public AccountsesRepository(AppDbContext context)
     {
         _context = context;
     }
