@@ -2,5 +2,7 @@
 
 public enum DbAnswer
 {
-    PasswordLengthIsNotProper, UserIsAlreadyRegistered
+    PasswordLengthIsNotProper,
+    UserIsAlreadyRegistered,
+    Success
 }

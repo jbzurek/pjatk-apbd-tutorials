@@ -3,10 +3,12 @@
 public class ExceptionLoggerMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly ILogger<ExceptionLoggerMiddleware> _logger;
 
-    public ExceptionLoggerMiddleware(RequestDelegate next)
+    public ExceptionLoggerMiddleware(RequestDelegate next, ILogger<ExceptionLoggerMiddleware> logger)
     {
         _next = next;
+        _logger = logger;
     }
 
     public async Task InvokeAsync(HttpContext context)
@@ -15,15 +17,11 @@ public class ExceptionLoggerMiddleware
         {
             await _next(context);
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            await LogExtensionAsync(context, e);
+            _logger.LogError(ex, "Unhandled exception occurred.");
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            await context.Response.WriteAsync("Error. Please try again later.");
         }
-    }
-
-    private async Task LogExtensionAsync(HttpContext context, Exception e)
-    {
-        Console.WriteLine(e.ToString());
-        await _next(context);
     }
 }
