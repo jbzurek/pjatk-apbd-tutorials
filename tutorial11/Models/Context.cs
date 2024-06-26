@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using tutorial11.Configurations;
 
 namespace tutorial11.Models;
 

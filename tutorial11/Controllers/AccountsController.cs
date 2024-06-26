@@ -8,91 +8,65 @@ namespace tutorial11.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class AccountsController : ControllerBase
-{   
-    private readonly IConfiguration _configuration;
-    private readonly IAccountRepository _accountRepository;
-    private readonly IJwtAuthManager _jwtAuthManager;
+{
+    private readonly IAccountsRepository _accountsRepository;
 
-    public AccountsController(IAccountRepository accountRepository, IConfiguration configuration, IJwtAuthManager jwtAuthManager)
+    public AccountsController(IAccountsRepository accountsRepository)
     {
-        _accountRepository = accountRepository;
-        _configuration = configuration;
-        _jwtAuthManager = jwtAuthManager;
+        _accountsRepository = accountsRepository;
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(UserDto userDto)
+    public async Task<IActionResult> RegisterAsync(UserDto userDto)
     {
-        var (hashedPassword, salt) = SecurityHelper.GetHashedPasswordAndSalt(userDto.Password);
+        var result = await _accountsRepository.RegisterAsync(userDto);
 
-        var result = await _accountRepository.RegisterAsync(new UserDto
+        switch (result)
         {
-            Login = userDto.Login,
-            Password = hashedPassword,
-            Salt = salt
-        });
-
-        if (result == DbAnswer.UserIsAlreadyRegistered)
-        {
-            return Conflict("User is already registered.");
-        }
-        else if (result == DbAnswer.PasswordLengthIsNotProper)
-        {
-            return BadRequest("Password length is not proper.");
-        }
-        else
-        {
-            return Ok("Registration successful.");
+            case DbAnswer.OK:
+                return Ok("Successfully registered!");
+            case DbAnswer.PasswordLengthIsNotProper:
+                return BadRequest("Password is too short!");
+            case DbAnswer.UserIsAlreadyRegistered:
+                return BadRequest("User with the same login is already registered!");
+            default:
+                return StatusCode(500);
         }
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login(UserDto userDto)
+    public async Task<IActionResult> LoginAsync(UserDto userDto)
     {
-        var user = await _accountRepository.FindByLoginAsync(userDto.Login);
-        if (user == null)
+        var result = await _accountsRepository.LoginAsync(userDto);
+
+        switch (result.DbAnswer) 
         {
-            return Unauthorized();
+            case DbAnswer.OK:
+                return Ok(result);
+            case DbAnswer.BadPassword:
+                return Unauthorized("Password is wrong!");
+            case DbAnswer.UserNotFound:
+                return Unauthorized("Login is not found!");
+            default:
+                return Unauthorized();
         }
-
-        var hashedPassword = SecurityHelper.GetHashedPassword(userDto.Password, user.Salt);
-        if (user.Password != hashedPassword)
-        {
-            return Unauthorized();
-        }
-
-        var jwtResult = _jwtAuthManager.GenerateTokens(user.IdUser.ToString());
-        user.RefreshToken = jwtResult.RefreshToken;
-        user.RefreshTokenExpiration = jwtResult.RefreshTokenExpiration;
-
-        await _accountRepository.UpdateUserAsync(user);
-
-        return Ok(new
-        {
-            AccessToken = jwtResult.AccessToken,
-            RefreshToken = jwtResult.RefreshToken
-        });
     }
 
-    [HttpPost("refresh-token")]
-    public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
+    [HttpPost("updateAccessToken")]
+    public async Task<IActionResult> UpdateAccessTokenAsync(RefreshTokenDto refreshTokenDto)
     {
-        var user = await _accountRepository.FindByRefreshTokenAsync(refreshToken);
-        if (user == null || user.RefreshTokenExpiration <= DateTime.UtcNow)
+        var result = await _accountsRepository.UpdateAccessTokenAsync(refreshTokenDto);
+
+        switch (result.DbAnswer)
         {
-            return Unauthorized();
+            case DbAnswer.OK:
+                return Ok(result);
+            case DbAnswer.RefreshTokenIsExpired:
+                return BadRequest("Refresh token is expired!");
+            case DbAnswer.UserNotFound:
+                return BadRequest("User is not found!");
+            default:
+                return Unauthorized();
         }
-
-        var jwtResult = _jwtAuthManager.GenerateTokens(user.IdUser.ToString());
-        user.RefreshToken = jwtResult.RefreshToken;
-        user.RefreshTokenExpiration = jwtResult.RefreshTokenExpiration;
-
-        await _accountRepository.UpdateUserAsync(user);
-
-        return Ok(new
-        {
-            AccessToken = jwtResult.AccessToken,
-            RefreshToken = jwtResult.RefreshToken
-        });
     }
 }
