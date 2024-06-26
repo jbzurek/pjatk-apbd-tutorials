@@ -2,7 +2,7 @@
 uwierzytelnienie. W tym przypadku pracujemy na kodzie z
 poprzednich ćwiczeń.
 
-1. Implementujemy middleware umożliwiający zapewniający
+1. Implementujemy middleware zapewniający
    globalną obsługę błędów w naszym kodzie.
 2. Implementujemy końcówkę umożliwiającą zarejestrowanie
    nowego użytkownika. Użytkownik podczas rejestracji powinien
