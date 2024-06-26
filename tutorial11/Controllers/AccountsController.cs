@@ -23,7 +23,7 @@ public class AccountsController : ControllerBase
 
         switch (result)
         {
-            case DbAnswer.OK:
+            case DbAnswer.Success:
                 return Ok("Successfully registered!");
             case DbAnswer.PasswordLengthIsNotProper:
                 return BadRequest("Password is too short!");
@@ -41,7 +41,7 @@ public class AccountsController : ControllerBase
 
         switch (result.DbAnswer) 
         {
-            case DbAnswer.OK:
+            case DbAnswer.Success:
                 return Ok(result);
             case DbAnswer.BadPassword:
                 return Unauthorized("Password is wrong!");
@@ -59,7 +59,7 @@ public class AccountsController : ControllerBase
 
         switch (result.DbAnswer)
         {
-            case DbAnswer.OK:
+            case DbAnswer.Success:
                 return Ok(result);
             case DbAnswer.RefreshTokenIsExpired:
                 return BadRequest("Refresh token is expired!");

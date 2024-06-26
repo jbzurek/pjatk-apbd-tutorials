@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using tutorial11.Helpers;
 using tutorial11.Models;
@@ -22,7 +23,7 @@ public class AccountsRepository : IAccountsRepository
 
     public async Task<LoginHelper> LoginAsync(UserDto userDto)
     {
-        var user = await _context.User.FirstOrDefaultAsync(e => e.Login == userDto.Login);
+        var user = await _context.Users.FirstOrDefaultAsync(e => e.Login == userDto.Login);
         if (user == null)
         {
             return new LoginHelper(DbAnswer.UserNotFound);
@@ -40,7 +41,7 @@ public class AccountsRepository : IAccountsRepository
 
         await _context.SaveChangesAsync();
 
-        return new LoginHelper(DbAnswer.OK, new JwtSecurityTokenHandler().WriteToken(token), user.RefreshToken);
+        return new LoginHelper(DbAnswer.Success, new JwtSecurityTokenHandler().WriteToken(token), user.RefreshToken);
     }
 
     public async Task<DbAnswer> RegisterAsync(UserDto userDto)
@@ -69,12 +70,12 @@ public class AccountsRepository : IAccountsRepository
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();
 
-        return DbAnswer.OK;
+        return DbAnswer.Success;
     }
 
     public async Task<LoginHelper> UpdateAccessTokenAsync(RefreshTokenDto tokenDto)
     {
-        var user = await _context.User.FirstOrDefaultAsync(e => e.RefreshToken == tokenDto.RefreshToken);
+        var user = await _context.Users.FirstOrDefaultAsync(e => e.RefreshToken == tokenDto.RefreshToken);
         if (user == null)
         {
             return new LoginHelper(DbAnswer.UserNotFound);
@@ -92,9 +93,8 @@ public class AccountsRepository : IAccountsRepository
 
         await _context.SaveChangesAsync();
 
-        return new LoginHelper(DbAnswer.OK, new JwtSecurityTokenHandler().WriteToken(token), user.RefreshToken);
+        return new LoginHelper(DbAnswer.Success, new JwtSecurityTokenHandler().WriteToken(token), user.RefreshToken);
     }
-
 
     private JwtSecurityToken GetToken()
     {

@@ -4,5 +4,8 @@ public enum DbAnswer
 {
     PasswordLengthIsNotProper,
     UserIsAlreadyRegistered,
+    BadPassword,
+    UserNotFound,
+    RefreshTokenIsExpired,
     Success
 }
