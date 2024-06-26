@@ -1,3 +1,7 @@
+using Microsoft.EntityFrameworkCore;
+using tutorial12.Data;
+using tutorial12.Models;
+
 namespace tutorial12;
 
 public class Program
@@ -6,10 +10,20 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddDbContext<Tutorial12Context>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("Tutorial12Context")));
+
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 
         var app = builder.Build();
+        
+        using (var scope = app.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+
+            SeedData.Initialize(services);
+        }
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
